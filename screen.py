@@ -19,7 +19,8 @@ if __name__ == '__main__':
     size = width, height = 800, 600
     screen = pygame.display.set_mode(size)
     while run:
-        screen.fill((255, 255, 255))
+        screen.fill(Screen.COLORS['blue'])
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
+        pygame.display.flip()
