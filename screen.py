@@ -14,6 +14,12 @@ class Screen:
 
 
 if __name__ == '__main__':
+    run = True
     pygame.init()
     size = width, height = 800, 600
     screen = pygame.display.set_mode(size)
+    while run:
+        screen.fill((0, 0, 0))
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                run = False
