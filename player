@@ -11,5 +11,5 @@ class Player:
         self.x += x
         self.y += y
         
-    def render(self)
+    def render(self):
         pygame.draw.circle(screen, (255, 200, 200), (self.x, self.y), self.r)
