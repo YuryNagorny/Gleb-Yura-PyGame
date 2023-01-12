@@ -1,0 +1,15 @@
+import pygame 
+
+
+class Player:
+    def __init__(self):
+        self.x = 400
+        self.y = 300 
+        self.r = 25
+    
+    def move(self, x, y):
+        self.x += x
+        self.y += y
+        
+    def render(self)
+        pygame.draw.circle(screen, (255, 200, 200), (self.x, self.y), self.r)
