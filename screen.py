@@ -12,4 +12,6 @@ class Screen:
 
 	def __init__(self):
 		pygame.init()
+		size = 800, 600
+		self.screen = pygame.display.set_mode(size)
 		self.screen.fill(self.COLORS["blue"])
