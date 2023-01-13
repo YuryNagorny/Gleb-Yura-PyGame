@@ -122,22 +122,14 @@ if __name__ == '__main__':
                 player.shot()
             if keys[pygame.K_SPACE]:
                 player.shot()
-            elif keys[pygame.K_s] and keys[pygame.K_d]:
-                player.move(1, 1)
-            elif keys[pygame.K_s] and keys[pygame.K_a]:
-                player.move(-1, 1)
-            elif keys[pygame.K_w] and keys[pygame.K_d]:
-                player.move(1, -1)
-            elif keys[pygame.K_w] and keys[pygame.K_a]:
-                player.move(-1, -1)
-            elif keys[pygame.K_d]:
-                player.move(math.sqrt(2), 0)
-            elif keys[pygame.K_w]:
-                player.move(0, math.sqrt(2) * -1)
-            elif keys[pygame.K_a]:
-                player.move(math.sqrt(2) * -1, 0)
-            elif keys[pygame.K_s]:
-                player.move(0, math.sqrt(2))
+            if keys[pygame.K_a]:
+                player.move(-1, 0)
+            if keys[pygame.K_d]:
+                player.move(1, 0)
+            if keys[pygame.K_w]:
+                player.move(0, -1)
+            if keys[pygame.K_s]:
+                player.move(0, 1)
         for i in bullets:
             i.render()
             i.move()
