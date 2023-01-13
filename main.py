@@ -7,13 +7,13 @@ class projectile:
     def __init__(self, x, y, r, color):
         self.x = x
         self.y = y
-        self.v = (random.randint(0, 1), random.randint(0, 5), random.randint(0, 5))
+        self.v = (random.randint(0, 1), random.randint(0, 500) / 100, random.randint(0, 500) / 100)
         self.r = r
         self.color = color
-    
+
     def render(self):
         pygame.draw.circle(screen, self.color, (self.x, self.y), self.r)
-    
+
     def kill(self, other):
         a, b, c = (self.x, self.y, self.r)
         d, e, f = (other.x, other.y, other.r)
@@ -27,32 +27,33 @@ class projectile:
         else:
             self.x += self.v[1]
         self.y += self.v[-1]
-            
+
 
 class P_bullet:
     def __init__(self, x, y):
         self.x = x
         self.y = y
-    
+
     def move(self):
         self.y -= 1
 
     def render(self):
         pygame.draw.rect(screen, (0, 200, 0), (self.x - 1, self.y, 2, 3))
 
+
 class Player:
     def __init__(self):
         self.x = 400
-        self.y = 300 
+        self.y = 300
         self.r = 5
-    
+
     def move(self, x, y):
         self.x += x
         self.y += y
-        
+
     def render(self):
         pygame.draw.circle(screen, (255, 200, 200), (self.x, self.y), self.r)
-    
+
     def shot(self):
         global bullets
         bullet = P_bullet(self.x, self.y)
@@ -70,7 +71,7 @@ class Screen:
     def __init__(self):
         pass
 
-a = projectile(400, 200, 19, (0, 0, 0))
+
 projectiles = []
 bullets = []
 player = Player()
@@ -99,22 +100,21 @@ if __name__ == '__main__':
             elif keys[pygame.K_w] and keys[pygame.K_a]:
                 player.move(-1, -1)
             elif keys[pygame.K_d]:
-                player.move(1, 0)
+                player.move(math.sqrt(2), 0)
             elif keys[pygame.K_w]:
-                player.move(0, -1)
+                player.move(0, math.sqrt(2) * -1)
             elif keys[pygame.K_a]:
-                player.move(-1, 0)
+                player.move(math.sqrt(2) * -1, 0)
             elif keys[pygame.K_s]:
-                player.move(0, 1)
+                player.move(0, math.sqrt(2))
         for i in bullets:
             i.render()
             i.move()
             if i.y < 0:
                 del bullets[bullets.index(i)]
         for i in projectiles:
-            if 0 > i.x > 800 or 0 > i.y > 600:
+            if 0 > i.x or i.x > 800 or 0 > i.y or i.y > 600:
                 del projectiles[projectiles.index(i)]
-                print(projectiles)
             i.render()
             i.move()
             if i.kill(player):
