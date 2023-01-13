@@ -3,11 +3,36 @@ import math
 import random
 
 
-class projectile:
-    def __init__(self, x, y, r, color):
+class Attack:
+    def __init__(self):
+        coord = {1: (400, 100), 2: (400, 200), 3: (400, 300), 4: (400, 200), 5: (400, 300), 6: (400, 300)}
+        self.type_ = random.randint(1, 6)
+        self.count_projectiles = 300 // self.type_
+        c = random.randint(0, 3)
+        self.projectiles = []
+        for j in range(0, self.count_projectiles, (1, 10, 20, 50)[c]):
+            color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+            for i in range(0, j):
+                if c == 1:
+                    self.projectiles.append(Projectile(coord[self.type_][0], coord[self.type_][1], 3, color, i % 2))
+                if c == 2:
+                    self.projectiles.append(Projectile(coord[self.type_][0], coord[self.type_][1], 5, color, i % 2))
+                if c == 3:
+                    self.projectiles.append(Projectile(coord[self.type_][0], coord[self.type_][1] * -1, 10, color, i % 2))
+                if c == 5:
+                    self.projectiles.append(Projectile(coord[self.type_][0], coord[self.type_][1] * -1, 15, color, i % 2))
+                if c == 6:
+                    self.projectiles.append(Projectile(coord[self.type_][0], coord[self.type_][1] * -1, 25, color, i % 2))
+
+
+class Projectile:
+    def __init__(self, x, y, r, color, gravity):
         self.x = x
         self.y = y
-        self.v = (random.randint(0, 1), random.randint(0, 500) / 100, random.randint(0, 500) / 100)
+        if gravity:
+            self.v = (random.randint(0, 1), random.randint(0, 500) / 100, random.randint(0, 500) / 100)
+        else:
+            self.v = (random.randint(0, 1), random.randint(0, 500) / 100, random.randint(0, 500) / 100 * -1)
         self.r = r
         self.color = color
 
@@ -81,6 +106,9 @@ if __name__ == '__main__':
     size = width, height = 800, 600
     screen = pygame.display.set_mode(size)
     while run:
+        if len(projectiles) == 0:
+            a = Attack()
+            projectiles = a.projectiles.copy()
         clock = pygame.time.Clock()
         screen.fill(Screen.COLORS['blue'])
         keys = pygame.key.get_pressed()
@@ -118,7 +146,7 @@ if __name__ == '__main__':
             i.render()
             i.move()
             if i.kill(player):
-                print(1)
+                pass
         player.render()
         pygame.display.flip()
         clock.tick(Screen.FPS)
