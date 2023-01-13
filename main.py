@@ -4,8 +4,7 @@ import random
 
 
 class Attack:
-    def __init__(self):
-        coord = {1: (400, 100), 2: (400, 200), 3: (400, 300), 4: (400, 200), 5: (400, 300), 6: (400, 300)}
+    def __init__(self, coord):
         self.type_ = random.randint(1, 6)
         self.count_projectiles = 300 // self.type_
         c = random.randint(0, 3)
@@ -14,13 +13,13 @@ class Attack:
             color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
             for i in range(0, j):
                 if c == 1:
-                    self.projectiles.append(Projectile(coord[self.type_][0], coord[self.type_][1], 3, color, i % 2))
+                    self.projectiles.append(Projectile(coord[0], coord[1], 3, color, i % 2))
                 if c == 2:
-                    self.projectiles.append(Projectile(coord[self.type_][0], coord[self.type_][1], 5, color, i % 2))
+                    self.projectiles.append(Projectile(coord[0], coord[1], 5, color, i % 2))
                 if c == 3:
-                    self.projectiles.append(Projectile(coord[self.type_][0], coord[self.type_][1] * -1, 10, color, i % 2))
+                    self.projectiles.append(Projectile(coord[0], coord[1] * -1, 10, color, i % 2))
                 if c == 5:
-                    self.projectiles.append(Projectile(coord[self.type_][0], coord[self.type_][1] * -1, 15, color, i % 2))
+                    self.projectiles.append(Projectile(coord[0], coord[1] * -1, 15, color, i % 2))
                 if c == 6:
                     self.projectiles.append(Projectile(coord[self.type_][0], coord[self.type_][1] * -1, 25, color, i % 2))
 
@@ -101,16 +100,20 @@ projectiles = []
 bullets = []
 player = Player()
 if __name__ == '__main__':
+    coord = (400, 300)
     run = True
     pygame.init()
     size = width, height = 800, 600
     screen = pygame.display.set_mode(size)
     while run:
+        stage = 0
         if len(projectiles) == 0:
-            a = Attack()
+            a = Attack(coord)
             projectiles = a.projectiles.copy()
+            coord = (random.randint(0, 800), random.randint(0, 600))
         clock = pygame.time.Clock()
         screen.fill(Screen.COLORS['blue'])
+        pygame.draw.circle(screen, (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)), coord, 20)
         keys = pygame.key.get_pressed()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -150,3 +153,5 @@ if __name__ == '__main__':
         player.render()
         pygame.display.flip()
         clock.tick(Screen.FPS)
+        if stage < 255:
+            stage += 1
