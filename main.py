@@ -5,23 +5,22 @@ import random
 
 class Attack:
     def __init__(self, coord):
-        self.type_ = random.randint(1, 6)
-        self.count_projectiles = 300 // self.type_
-        c = random.randint(0, 3)
+        self.type_ = random.randint(1, 5)
+        self.count_projectiles = 250 // self.type_
         self.projectiles = []
-        for j in range(0, self.count_projectiles, (1, 10, 20, 50)[c]):
+        for j in range(0, self.count_projectiles, (1, 5, 10, 20, 25, 50)[self.type_]):
             color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
             for i in range(0, j):
-                if c == 1:
+                if self.type_ == 1:
                     self.projectiles.append(Projectile(coord[0], coord[1], 3, color, i % 2))
-                if c == 2:
+                if self.type_ == 2:
                     self.projectiles.append(Projectile(coord[0], coord[1], 5, color, i % 2))
-                if c == 3:
-                    self.projectiles.append(Projectile(coord[0], coord[1] * -1, 10, color, i % 2))
-                if c == 5:
-                    self.projectiles.append(Projectile(coord[0], coord[1] * -1, 15, color, i % 2))
-                if c == 6:
-                    self.projectiles.append(Projectile(coord[self.type_][0], coord[self.type_][1] * -1, 25, color, i % 2))
+                if self.type_ == 3:
+                    self.projectiles.append(Projectile(coord[0], coord[1], 10, color, i % 2))
+                if self.type_ == 4:
+                    self.projectiles.append(Projectile(coord[0], coord[1], 15, color, i % 2))
+            if self.type_ == 5: 
+                self.projectiles.append(Projectile(coord[0], coord[1], 25, color, random.randint(0, 1)))
 
 
 class Projectile:
@@ -66,10 +65,11 @@ class P_bullet:
 
 
 class Player:
-    def __init__(self):
+    def __init__(self, setting):
         self.x = 400
         self.y = 300
         self.r = 5
+        self.setting = setting
 
     def move(self, x, y):
         self.x += x
@@ -77,6 +77,9 @@ class Player:
 
     def render(self):
         pygame.draw.circle(screen, (255, 200, 200), (self.x, self.y), self.r)
+    
+    def mouse_setting(self, pos):
+        self.x, self.y = pos[0], pos[1]
 
     def shot(self):
         global bullets
@@ -98,52 +101,139 @@ class Screen:
 
 projectiles = []
 bullets = []
-player = Player()
+player = Player(1)
+times = 0
 if __name__ == '__main__':
-    coord = (400, 300)
-    run = True
-    pygame.init()
-    size = width, height = 800, 600
-    screen = pygame.display.set_mode(size)
-    while run:
-        stage = 0
-        if len(projectiles) == 0:
-            a = Attack(coord)
-            projectiles = a.projectiles.copy()
-            coord = (random.randint(0, 800), random.randint(0, 600))
-        clock = pygame.time.Clock()
-        screen.fill(Screen.COLORS['blue'])
-        pygame.draw.circle(screen, (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)), coord, 20)
-        keys = pygame.key.get_pressed()
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                run = False
-            if event.type == pygame.MOUSEBUTTONUP:
-                player.shot()
-            if keys[pygame.K_SPACE]:
-                player.shot()
-            if keys[pygame.K_a]:
-                player.move(-1, 0)
-            if keys[pygame.K_d]:
-                player.move(1, 0)
-            if keys[pygame.K_w]:
-                player.move(0, -1)
-            if keys[pygame.K_s]:
-                player.move(0, 1)
-        for i in bullets:
-            i.render()
-            i.move()
-            if i.y < 0:
-                del bullets[bullets.index(i)]
-        for i in projectiles:
-            if 0 > i.x or i.x > 800 or 0 > i.y or i.y > 600:
-                del projectiles[projectiles.index(i)]
-            i.render()
-            i.move()
-            if i.kill(player):
-                pass
-        player.render()
-        pygame.display.flip()
-        clock.tick(Screen.FPS)
-        if stage < 255:
-            stage += 1
+    if player.setting:
+        coord = (400, 300)
+        run = True
+        pygame.init()
+        size = width, height = 800, 600
+        screen = pygame.display.set_mode(size)
+        while run:
+            stage = 0
+            if len(projectiles) == 0:
+                a = Attack(coord)
+                projectiles = a.projectiles.copy()
+                coord = (random.randint(0, 800), random.randint(0, 600))
+            clock = pygame.time.Clock()
+            screen.fill(Screen.COLORS['blue'])
+            pygame.draw.circle(screen, (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)), coord, 20)
+            keys = pygame.key.get_pressed()
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    run = False
+                if event.type == pygame.MOUSEBUTTONUP:
+                    player.shot()
+            coord = (400, 300)
+            run = True
+            pygame.init()
+            size = width, height = 800, 600
+            screen = pygame.display.set_mode(size)
+            while run:
+                stage = 0
+                if keys[pygame.K_SPACE]:
+                    player.shot()
+                if keys[pygame.K_a]:
+                    player.move(-2, 0)
+                if keys[pygame.K_d]:
+                    player.move(2, 0)
+                if keys[pygame.K_w]:
+                    player.move(0, -2)
+                if keys[pygame.K_s]:
+                    player.move(0, 2)
+                if len(projectiles) == 0 or times == 300:
+                    times = 0
+                    a = Attack(coord)
+                    projectiles = a.projectiles.copy()
+                    coord = (random.randint(0, 800), random.randint(0, 600))
+                clock = pygame.time.Clock()
+                screen.fill(Screen.COLORS['blue'])
+                pygame.draw.circle(screen, (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)), coord, 20)
+                keys = pygame.key.get_pressed()
+                for event in pygame.event.get():
+                    if event.type == pygame.QUIT:
+                        run = False
+                    if event.type == pygame.MOUSEBUTTONUP:
+                        player.shot()
+                    if keys[pygame.K_SPACE]:
+                        player.shot()
+                for i in bullets:
+                    i.render()
+                    i.move()
+                    if i.y < 0:
+                        del bullets[bullets.index(i)]
+                for i in projectiles:
+                    if 0 > i.x or i.x > 800 or 0 > i.y or i.y > 600:
+                        del projectiles[projectiles.index(i)]
+                    i.render()
+                    i.move()
+                    if i.kill(player):
+                        print('kill')
+                player.render()
+                pygame.display.flip()
+                clock.tick(Screen.FPS)
+                times += 1
+                if stage < 255:
+                    stage += 1
+                for i in bullets:
+                    i.render()
+                    i.move()
+                    if i.y < 0:
+                        del bullets[bullets.index(i)]
+                for i in projectiles:
+                    if 0 > i.x or i.x > 800 or 0 > i.y or i.y > 600:
+                        del projectiles[projectiles.index(i)]
+                    i.render()
+                    i.move()
+                    if i.kill(player):
+                        pass
+                player.render()
+                pygame.display.flip()
+                clock.tick(Screen.FPS)
+                if stage < 255:
+                    stage += 1
+    else:
+        coord = (400, 300)
+        run = True
+        pygame.init()
+        size = width, height = 800, 600
+        screen = pygame.display.set_mode(size)
+        while run:
+            stage = 0
+            if len(projectiles) == 0 or times == 300:
+                times = 0
+                a = Attack(coord)
+                projectiles = a.projectiles.copy()
+                coord = (random.randint(0, 800), random.randint(0, 600))
+            clock = pygame.time.Clock()
+            screen.fill(Screen.COLORS['blue'])
+            pygame.draw.circle(screen, (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)), coord, 20)
+            keys = pygame.key.get_pressed()
+            for event in pygame.event.get():
+                if event.type == pygame.MOUSEMOTION:
+                    player.mouse_setting(event.pos)
+                if event.type == pygame.QUIT:
+                    run = False
+                if event.type == pygame.MOUSEBUTTONUP:
+                    player.shot()
+                if keys[pygame.K_SPACE]:
+                    player.shot()
+            for i in bullets:
+                i.render()
+                i.move()
+                if i.y < 0:
+                    del bullets[bullets.index(i)]
+            for i in projectiles:
+                if 0 > i.x or i.x > 800 or 0 > i.y or i.y > 600:
+                    del projectiles[projectiles.index(i)]
+                i.render()
+                i.move()
+                if i.kill(player):
+                    print('kill')
+            player.render()
+            pygame.display.flip()
+            clock.tick(Screen.FPS)
+            times += 1
+            if stage < 255:
+                stage += 1
