@@ -4,33 +4,64 @@ import random
 
 
 class Attack:
-    def __init__(self, coord):
-        self.type_ = random.randint(1, 5)
-        self.count_projectiles = 250 // self.type_
+    def __init__(self):
+        radius = {1: 5, 2: 10, 3: 15, 4: 20}
+        self.type_ = random.randint(1, 4)
+        self.geometry = random.randint(1, 4)
         self.projectiles = []
-        for j in range(0, self.count_projectiles, (1, 5, 10, 20, 25, 50)[self.type_]):
-            color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
-            for i in range(0, j):
-                if self.type_ == 1:
-                    self.projectiles.append(Projectile(coord[0], coord[1], 3, color, i % 2))
-                if self.type_ == 2:
-                    self.projectiles.append(Projectile(coord[0], coord[1], 5, color, i % 2))
-                if self.type_ == 3:
-                    self.projectiles.append(Projectile(coord[0], coord[1], 10, color, i % 2))
-                if self.type_ == 4:
-                    self.projectiles.append(Projectile(coord[0], coord[1], 15, color, i % 2))
-            if self.type_ == 5: 
-                self.projectiles.append(Projectile(coord[0], coord[1], 25, color, random.randint(0, 1)))
-
+        if self.geometry == 1:
+            for _ in range(0, 100 // self.type_):
+                coord = (400, 0)
+                color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+                vector = (1, random.randint(20, 500) / 100, random.randint(20, 500) / 100)
+                self.projectiles.append(Projectile(coord[0], coord[1], radius[self.type_], color, 0, vector))
+                self.projectiles.append(Projectile(coord[0], coord[1], radius[self.type_], color, 0, (0, vector[1], vector[-1])))
+        if self.geometry == 2:
+            coord = (400, 300)
+            for _ in range(0, 100 // self.type_):
+                color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+                vector = (1, random.randint(20, 500) / 100, random.randint(20, 500) / 100)
+                self.projectiles.append(Projectile(coord[0], coord[1], radius[self.type_], color, 0, vector))
+                self.projectiles.append(Projectile(coord[0], coord[1], radius[self.type_], color, 0, (0, vector[1], vector[-1])))
+                self.projectiles.append(Projectile(coord[0], coord[1], radius[self.type_], color, 1, vector))
+                self.projectiles.append(Projectile(coord[0], coord[1], radius[self.type_], color, 1, (0, vector[1], vector[-1])))     
+        if self.geometry == 3:
+                coord = (400, 300)
+                for _ in range(0, 100 // self.type_):
+                    if random.randint(0, 1):
+                        color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+                        vector = (1, random.randint(20, 300) / 100, random.randint(20, 500) / 100)
+                        self.projectiles.append(Projectile(coord[0], coord[1], radius[self.type_], color, 0, vector))
+                        self.projectiles.append(Projectile(coord[0], coord[1], radius[self.type_], color, 0, (0, vector[1], vector[-1])))
+                        vector = (1, random.randint(20, 500) / 100, random.randint(20, 500) / 100)
+                        self.projectiles.append(Projectile(coord[0], coord[1], radius[self.type_], color, 1, vector))
+                        self.projectiles.append(Projectile(coord[0], coord[1], radius[self.type_], color, 1, (0, vector[1], vector[-1])))
+                    else:
+                        color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+                        vector = (1, random.randint(20, 300) / 100, random.randint(20, 500) / 100)
+                        self.projectiles.append(Projectile(coord[0], coord[1], radius[self.type_], color, 1, vector))
+                        self.projectiles.append(Projectile(coord[0], coord[1], radius[self.type_], color, 1, (0, vector[1], vector[-1])))
+                        vector = (1, random.randint(20, 500) / 100, random.randint(20, 500) / 100)
+                        self.projectiles.append(Projectile(coord[0], coord[1], radius[self.type_], color, 0, vector))
+                        self.projectiles.append(Projectile(coord[0], coord[1], radius[self.type_], color, 0, (0, vector[1], vector[-1])))
+        if self.geometry == 4:
+            coord = (400, 300)
+            for _ in range(0, 100 // self.type_):
+                color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+                vector = (1, random.randint(20, 500) / 100, random.randint(20, 500) / 100)
+                self.projectiles.append(Projectile(coord[0], coord[1], radius[self.type_], color, 1, vector))
+                self.projectiles.append(Projectile(coord[0], coord[1], radius[self.type_], color, 1, (0, vector[1], vector[-1])))
+                self.projectiles.append(Projectile(coord[0], coord[1], radius[self.type_], color, 0, vector))
+                self.projectiles.append(Projectile(coord[0], coord[1], radius[self.type_], color, 0, (0, vector[1], vector[-1])))
+            
 
 class Projectile:
-    def __init__(self, x, y, r, color, gravity):
+    def __init__(self, x, y, r, color, gravity, vector):
         self.x = x
         self.y = y
+        self.vector = vector
         if gravity:
-            self.v = (random.randint(0, 1), random.randint(0, 500) / 100, random.randint(0, 500) / 100)
-        else:
-            self.v = (random.randint(0, 1), random.randint(0, 500) / 100, random.randint(0, 500) / 100 * -1)
+            self.vector = (self.vector[0], self.vector[1], -self.vector[-1])
         self.r = r
         self.color = color
 
@@ -45,11 +76,11 @@ class Projectile:
         return True
 
     def move(self):
-        if self.v[0] == 0:
-            self.x -= self.v[1]
+        if self.vector[0] == 0:
+            self.x -= self.vector[1]
         else:
-            self.x += self.v[1]
-        self.y += self.v[-1]
+            self.x += self.vector[1]
+        self.y += self.vector[-1]
 
 
 class P_bullet:
@@ -112,13 +143,11 @@ if __name__ == '__main__':
         screen = pygame.display.set_mode(size)
         while run:
             stage = 0
-            if len(projectiles) == 0:
-                a = Attack(coord)
+            if len(projectiles) == 0 or times == 300:
+                a = Attack()
                 projectiles = a.projectiles.copy()
-                coord = (random.randint(0, 800), random.randint(0, 600))
             clock = pygame.time.Clock()
             screen.fill(Screen.COLORS['blue'])
-            pygame.draw.circle(screen, (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)), coord, 20)
             keys = pygame.key.get_pressed()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -144,12 +173,10 @@ if __name__ == '__main__':
                     player.move(0, 2)
                 if len(projectiles) == 0 or times == 300:
                     times = 0
-                    a = Attack(coord)
+                    a = Attack()
                     projectiles = a.projectiles.copy()
-                    coord = (random.randint(0, 800), random.randint(0, 600))
                 clock = pygame.time.Clock()
                 screen.fill(Screen.COLORS['blue'])
-                pygame.draw.circle(screen, (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)), coord, 20)
                 keys = pygame.key.get_pressed()
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
@@ -193,6 +220,7 @@ if __name__ == '__main__':
                 clock.tick(Screen.FPS)
                 if stage < 255:
                     stage += 1
+                times += 1
     else:
         coord = (400, 300)
         run = True
@@ -203,12 +231,10 @@ if __name__ == '__main__':
             stage = 0
             if len(projectiles) == 0 or times == 300:
                 times = 0
-                a = Attack(coord)
+                a = Attack()
                 projectiles = a.projectiles.copy()
-                coord = (random.randint(0, 800), random.randint(0, 600))
             clock = pygame.time.Clock()
             screen.fill(Screen.COLORS['blue'])
-            pygame.draw.circle(screen, (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)), coord, 20)
             keys = pygame.key.get_pressed()
             for event in pygame.event.get():
                 if event.type == pygame.MOUSEMOTION:
