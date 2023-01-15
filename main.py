@@ -187,7 +187,7 @@ if __name__ == '__main__':
             if len(projectiles) == 0 or times == 300:
                 a = Attack()
                 projectiles = a.projectiles.copy()
-                boss.move
+                boss.move()
             clock = pygame.time.Clock()
             screen.fill(Screen.COLORS['blue'])
             keys = pygame.key.get_pressed()
@@ -321,4 +321,3 @@ if __name__ == '__main__':
             if stage < 255:
                 stage += 1
             boss.move()
-            print(boss.hp)
