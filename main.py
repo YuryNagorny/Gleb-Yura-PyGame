@@ -2,22 +2,20 @@ import pygame
 import math
 import random
 
-
 class Attack:
     def __init__(self):
         radius = {1: 5, 2: 10, 3: 15, 4: 20}
         self.type_ = random.randint(1, 4)
         self.geometry = random.randint(1, 4)
         self.projectiles = []
+        coord = (boss.x, boss.y)
         if self.geometry == 1:
             for _ in range(0, 100 // self.type_):
-                coord = (400, 0)
                 color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
                 vector = (1, random.randint(20, 500) / 100, random.randint(20, 500) / 100)
                 self.projectiles.append(Projectile(coord[0], coord[1], radius[self.type_], color, 0, vector))
                 self.projectiles.append(Projectile(coord[0], coord[1], radius[self.type_], color, 0, (0, vector[1], vector[-1])))
         if self.geometry == 2:
-            coord = (400, 300)
             for _ in range(0, 100 // self.type_):
                 color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
                 vector = (1, random.randint(20, 500) / 100, random.randint(20, 500) / 100)
@@ -26,7 +24,6 @@ class Attack:
                 self.projectiles.append(Projectile(coord[0], coord[1], radius[self.type_], color, 1, vector))
                 self.projectiles.append(Projectile(coord[0], coord[1], radius[self.type_], color, 1, (0, vector[1], vector[-1])))     
         if self.geometry == 3:
-                coord = (400, 300)
                 for _ in range(0, 100 // self.type_):
                     if random.randint(0, 1):
                         color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
@@ -45,7 +42,6 @@ class Attack:
                         self.projectiles.append(Projectile(coord[0], coord[1], radius[self.type_], color, 0, vector))
                         self.projectiles.append(Projectile(coord[0], coord[1], radius[self.type_], color, 0, (0, vector[1], vector[-1])))
         if self.geometry == 4:
-            coord = (400, 300)
             for _ in range(0, 100 // self.type_):
                 color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
                 vector = (1, random.randint(20, 500) / 100, random.randint(20, 500) / 100)
@@ -55,6 +51,40 @@ class Attack:
                 self.projectiles.append(Projectile(coord[0], coord[1], radius[self.type_], color, 0, (0, vector[1], vector[-1])))
             
 
+class Enemy:
+    def __init__(self, coords, color):
+        self.x, self.y = coords
+        self.hp = 100 * (enemy_count / 50 + 1)
+        self.color = color
+        self.r = 40
+        
+    def render(self):
+        pygame.draw.circle(screen, self.color, (self.x, self.y), self.r)
+    
+    def damage_taken(self):
+        global enemy_count
+        global boss
+        self.hp -= 1
+        if self.hp <= 0:
+            enemy_count += 1
+            boss = Enemy((random.randint(40, 760), random.randint(40, 400)), (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
+            
+    def move(self):
+        if random.randint(0, 1):
+            if self.x >= 740:
+                self.x -= 1
+            elif self.x <= 40:
+                self.x += 1
+            else:
+                self.x += 1 if random.randint(0, 1) else -1
+        else:
+            if self.y >= 640:
+                self.y -= 1
+            elif self.y <= 40:
+                self.y += 1
+            else:
+                self.y += 1 if random.randint(0, 1) else -1
+        
 class Projectile:
     def __init__(self, x, y, r, color, gravity, vector):
         self.x = x
@@ -87,12 +117,20 @@ class P_bullet:
     def __init__(self, x, y):
         self.x = x
         self.y = y
+        self.r = 3
 
     def move(self):
         self.y -= 1
 
     def render(self):
         pygame.draw.rect(screen, (0, 200, 0), (self.x - 1, self.y, 2, 3))
+    
+    def shot(self, other):
+        a, b, c = (self.x, self.y, self.r)
+        d, e, f = (other.x, other.y, other.r)
+        if math.sqrt((a - d) ** 2 + (b - e) ** 2) > c + f:
+            return False
+        return True
 
 
 class Player:
@@ -130,10 +168,13 @@ class Screen:
         pass
 
 
+enemy_count = 0
 projectiles = []
 bullets = []
-player = Player(1)
+player = Player(0)
 times = 0
+boss = Enemy((400, 100), (0, 0, 0))
+
 if __name__ == '__main__':
     if player.setting:
         coord = (400, 300)
@@ -146,6 +187,7 @@ if __name__ == '__main__':
             if len(projectiles) == 0 or times == 300:
                 a = Attack()
                 projectiles = a.projectiles.copy()
+                boss.move
             clock = pygame.time.Clock()
             screen.fill(Screen.COLORS['blue'])
             keys = pygame.key.get_pressed()
@@ -154,6 +196,7 @@ if __name__ == '__main__':
                     run = False
                 if event.type == pygame.MOUSEBUTTONUP:
                     player.shot()
+            boss.render()
             coord = (400, 300)
             run = True
             pygame.init()
@@ -174,6 +217,8 @@ if __name__ == '__main__':
                 if len(projectiles) == 0 or times == 300:
                     times = 0
                     a = Attack()
+                    boss.move(random.randint(40, 760), random.randint(40, 560))
+                    boss.render()
                     projectiles = a.projectiles.copy()
                 clock = pygame.time.Clock()
                 screen.fill(Screen.COLORS['blue'])
@@ -188,6 +233,9 @@ if __name__ == '__main__':
                 for i in bullets:
                     i.render()
                     i.move()
+                    if i.shot(boss):
+                        boss.damage_taken()
+                        del bullets[bullets.index(i)]
                     if i.y < 0:
                         del bullets[bullets.index(i)]
                 for i in projectiles:
@@ -208,6 +256,7 @@ if __name__ == '__main__':
                     i.move()
                     if i.y < 0:
                         del bullets[bullets.index(i)]
+                        
                 for i in projectiles:
                     if 0 > i.x or i.x > 800 or 0 > i.y or i.y > 600:
                         del projectiles[projectiles.index(i)]
@@ -215,12 +264,15 @@ if __name__ == '__main__':
                     i.move()
                     if i.kill(player):
                         pass
+                boss.render()
                 player.render()
                 pygame.display.flip()
-                clock.tick(Screen.FPS)
                 if stage < 255:
                     stage += 1
                 times += 1
+                boss.render()
+                boss.move()
+                clock.tick(Screen.FPS)
     else:
         coord = (400, 300)
         run = True
@@ -231,7 +283,8 @@ if __name__ == '__main__':
             stage = 0
             if len(projectiles) == 0 or times == 300:
                 times = 0
-                a = Attack()
+                a = Attack()   
+                boss.render()
                 projectiles = a.projectiles.copy()
             clock = pygame.time.Clock()
             screen.fill(Screen.COLORS['blue'])
@@ -245,7 +298,11 @@ if __name__ == '__main__':
                     player.shot()
                 if keys[pygame.K_SPACE]:
                     player.shot()
+            boss.render()
             for i in bullets:
+                if i.shot(boss):
+                    boss.damage_taken()
+                    del bullets[bullets.index(i)]
                 i.render()
                 i.move()
                 if i.y < 0:
@@ -263,3 +320,5 @@ if __name__ == '__main__':
             times += 1
             if stage < 255:
                 stage += 1
+            boss.move()
+            print(boss.hp)
