@@ -1,6 +1,8 @@
 import pygame
 import math
+import sys
 import random
+
 
 class Attack:
     def __init__(self):
@@ -9,7 +11,7 @@ class Attack:
         self.geometry = random.randint(1, 9)
         self.projectiles = []
         coord = (boss.x, boss.y)
-        self.count = 50 // self.type_
+        self.count = 60 // self.type_
         if self.geometry == 1:
             for _ in range(0, self.count):
                 color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
@@ -176,10 +178,8 @@ class Projectile:
         self.color = color
 
     def render(self):
-        pygame.draw.circle(screen, (255, 255, 255), (self.x, self.y), self.r + 1)
         pygame.draw.circle(screen, self.color, (self.x, self.y), self.r)
         
-
     def kill(self, other):
         a, b, c = (self.x, self.y, self.r)
         d, e, f = (other.x, other.y, other.r)
@@ -250,45 +250,43 @@ class Screen:
     def __init__(self):
         pass
 
-
 enemy_count = 0
 projectiles = []
 bullets = []
-player = Player(1)
+player = Player(0)
 times = 0
 boss = Enemy((400, 100), (0, 0, 0))
 diff = 1
 
-if __name__ == '__main__':
+def start():
+    global projectiles
+    global times
+    global screen
     if player.setting:
-        coord = (400, 300)
         run = True
         pygame.init()
         size = width, height = 800, 600
         screen = pygame.display.set_mode(size)
-        while run:
+        while run: 
             stage = 0
             if len(projectiles) == 0 or times == 300:
                 a = Attack()
                 projectiles = a.projectiles.copy()
-                boss.move()
+                boss.move()  
             clock = pygame.time.Clock()
-            boss.render()
-            screen.fill(Screen.COLORS['blue'])
-            boss.render()
             keys = pygame.key.get_pressed()
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     run = False
                 if event.type == pygame.MOUSEBUTTONUP:
                     player.shot()
-            coord = (400, 300)
             run = True
             pygame.init()
             size = width, height = 800, 600
             screen = pygame.display.set_mode(size)
             f = True
             while run:
+                screen.fill(Screen.COLORS['blue'])
                 stage = 0
                 if keys[pygame.K_1]:
                     projectiles = []
@@ -308,7 +306,6 @@ if __name__ == '__main__':
                         projectiles += Attack().projectiles
                     boss.render()
                 clock = pygame.time.Clock()
-                screen.fill(Screen.COLORS['blue'])
                 keys = pygame.key.get_pressed()
                 for event in pygame.event.get():
                     if event.type == pygame.QUIT:
@@ -333,7 +330,6 @@ if __name__ == '__main__':
                     if i.kill(player):
                         print('kill')
                 player.render()
-                pygame.display.flip()
                 clock.tick(Screen.FPS)
                 times += 1
                 if stage < 255:
@@ -352,13 +348,13 @@ if __name__ == '__main__':
                         pass
                 boss.render()
                 player.render()
-                pygame.display.flip()
                 if stage < 255:
                     stage += 1
                 times += 1
                 boss.render()
                 boss.move()
                 clock.tick(Screen.FPS)
+                pygame.display.flip()
     else:
         coord = (400, 300)
         run = True
@@ -409,3 +405,71 @@ if __name__ == '__main__':
             if stage < 255:
                 stage += 1
             boss.move()
+
+pygame.font.init()
+''' окно '''
+window = pygame.display.set_mode((800, 600))
+pygame.display.set_caption('Bullet-Hell')
+''' холст '''
+screen = pygame.Surface((800, 600))
+
+
+class Menu:
+    def __init__(self, punkts):
+        self.punkts = punkts
+
+    def render(self, screen, font, num_punkt):
+        for i in self.punkts:
+            if num_punkt == i[5]:
+                screen.blit(font.render(i[2], 1, i[4]), (i[0], i[1] - 30))
+            else:
+                screen.blit(font.render(i[2], 1, i[3]), (i[0], i[1] - 30))
+
+    def menu(self):
+        done = True
+        pygame.mouse.set_visible(True)
+        pygame.key.set_repeat(0, 0)
+        font_menu = pygame.font.Font(
+            r"data\arial.ttf", 50)
+        punkt = 0
+        while done:
+            screen.fill((89, 0, 163))
+            mp = pygame.mouse.get_pos()
+            for i in self.punkts:
+                if mp[0] > i[0] and mp[0] < i[0] + 155 and mp[1] > i[1] and mp[1] < i[1] + 50:
+                    punkt = i[5]
+            self.render(screen, font_menu, punkt)
+
+            for e in pygame.event.get():
+                if e.type == pygame.QUIT:
+                    sys.exit()
+                if e.type == pygame.KEYDOWN:
+                    if e.key == pygame.K_RETURN:
+                        if punkt == 0:
+                            done = False
+                        if punkt == 1:
+                            sys.exit()
+                    if e.key == pygame.K_ESCAPE:
+                        sys.exit()
+                    if e.key == pygame.K_UP:
+                        if punkt > 0:
+                            punkt -= 1
+                    if e.key == pygame.K_DOWN:
+                        if punkt < len(self.punkts) - 1:
+                            punkt += 1
+                if e.type == pygame.MOUSEBUTTONDOWN and e.button == 1:
+                    if punkt == 0:
+                        start()
+                        done = False
+                    if punkt == 1:
+                        sys.exit()
+
+            window.blit(screen, (0, 0))
+            pygame.display.update()
+
+
+''' создаем меню '''
+punkts = [(250, 250, 'Начать игру', (250, 250, 30), (250, 30, 250), 0),
+          (300, 300, 'Выйти', (250, 250, 30), (250, 30, 250), 1)]
+game = Menu(punkts)
+game.menu()
