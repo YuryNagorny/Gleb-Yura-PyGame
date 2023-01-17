@@ -214,3 +214,8 @@ def return_kills_place(user_id):
         "place": kills_place_res[ind][4]
     }
 
+
+def return_max_sec_by_one(user_id):
+    """Эта функция выбирает максимальное количество секунд пользователя"""
+    db.row_factory = sqlite3.Row
+    cur = db.cursor()
