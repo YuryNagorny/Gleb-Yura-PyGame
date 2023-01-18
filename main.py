@@ -1,6 +1,7 @@
 import pygame
 import math
 import sys
+import time
 import random
 
 
@@ -299,8 +300,8 @@ class Projectile:
         pygame.draw.circle(screen, self.color, (self.x, self.y), self.r)
         
     def kill(self, other):
-        a, b, c = (self.x, self.y, self.r)
-        d, e, f = (other.x, other.y, other.r)
+        a, b, c = (self.x, self.y, self.r - ((self.vector[0] + self.vector[1]) * 2))
+        d, e, f = (other.x, other.y, other.r - 2)
         if math.sqrt((a - d) ** 2 + (b - e) ** 2) > c + f:
             return False
         return True
@@ -327,7 +328,7 @@ class P_bullet:
     
     def shot(self, other):
         a, b, c = (self.x, self.y, self.r)
-        d, e, f = (other.x, other.y, other.r)
+        d, e, f = (other.x, other.y, other.r - 3)
         if math.sqrt((a - d) ** 2 + (b - e) ** 2) > c + f:
             return False
         return True
