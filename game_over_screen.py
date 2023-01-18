@@ -24,8 +24,7 @@ class Game_Over:
         done = True
         pygame.mouse.set_visible(True)
         pygame.key.set_repeat(0, 0)
-        font_menu = pygame.font.Font(
-            r"C:\Users\user\Desktop\PycharmProjects\YandexLyceumProjects\Bullet_hell\arial.ttf", 50)
+        font_menu = pygame.font.SysFont('arial', 50)
         punkt = 0
         while done:
             screen.fill((89, 0, 163))
