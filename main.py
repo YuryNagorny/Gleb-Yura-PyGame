@@ -1,7 +1,6 @@
 import pygame
 import math
 import sys
-import time
 import random
 
 
@@ -380,6 +379,8 @@ def initial():
     global times
     global boss
     global diff
+    global secconds
+    secconds = 0
     enemy_count = 0
     projectiles = []
     bullets = []
@@ -395,11 +396,13 @@ player = Player(1)
 times = 0
 boss = Enemy((400, 100), (0, 0, 0))
 diff = 1
+secconds = 0
 
 def start():
     global projectiles
     global times
     global screen
+    global secconds
     if player.setting:
         run = True
         pygame.init()
@@ -487,6 +490,7 @@ def start():
                 boss.move()
                 clock.tick(Screen.FPS // 1.3)
                 pygame.display.flip()
+                secconds += 1
     else:
         run = True
         pygame.init()
@@ -537,6 +541,7 @@ def start():
             boss.move()
             pygame.display.flip()
             clock.tick(Screen.FPS)
+            secconds += 1
             
 
 pygame.font.init()
