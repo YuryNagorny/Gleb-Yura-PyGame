@@ -3,6 +3,12 @@ import math
 import sys
 import random
 import sqlite3
+import traceback
+from PyQt5 import uic
+from PyQt5.QtWidgets import QApplication, QMainWindow, QInputDialog, QMessageBox, QLineEdit
+from PyQt5 import QtCore, QtWidgets
+from werkzeug.security import (check_password_hash, generate_password_hash)
+
 
 class Attack:
     def __init__(self):
@@ -133,6 +139,129 @@ class Attack:
                         self.projectiles.append(Projectile(0, i, radius[self.type_], color1, 0, (0, -2, 0)))
                         
 
+class Account(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        uic.loadUi('ui_registration.ui', self)
+        self.setWindowTitle('Bullet-Hell')
+        self.resize(QtCore.QSize(800, 600))
+        self.session = {}
+        self.reg_btn.clicked.connect(self.__reg)
+        self.log_btn.clicked.connect(self.__log)
+        self.Log_Out.clicked.connect(self.__leave_profile)
+        self.Del_Profile.clicked.connect(self.__del_profile)
+        self.account.hide()
+        self.reg_window.hide()
+
+    def log_to_reg(self):  # переключение между окнами входа и регистрации
+        self.to_reg_btn.clicked.connect(lambda: self.log_window.hide())
+        self.to_reg_btn.clicked.connect(lambda: self.reg_window.show())
+
+    def reg_to_log(self):  # переключение между окнами регистрации и входа
+        self.to_log_btn.clicked.connect(lambda: self.reg_window.hide())
+        self.to_log_btn.clicked.connect(lambda: self.log_window.show())
+
+    def __reg(self):  # регистрация пользователя
+        login = ex.login_reg.text()
+        password1 = ex.password1.text()
+        password2 = ex.password2.text()
+        if len(login) < 3:
+            ex.error_reg2.setText("Длина логина должна быть больше 3-ёх")
+        else:
+            ex.error_reg2.setText("")
+        if len(password1) < 8:
+            ex.error_reg3.setText("Длина пароля должна быть больше 8-ми")
+        else:
+            ex.error_reg3.setText("")
+            if password1 == password2:
+                ex.error_reg4.setText("")
+                res = reg(login, password1)
+                if res["status"]:
+                    ex.reg_window.hide()
+                    ex.account.show()
+                    self.session["id"] = res["id"]
+                    msg_box = QMessageBox(ex)
+                    msg_box.setText(res["msg"])
+                    msg_box.show()
+                    self.greeting.setText(f'Добро пожаловать, {login}!')
+                    kills_res = return_kills(self.session["id"])
+                 #   max_sec_res = return_seconds(self.session["id"])
+                    kills_place = return_kills_place(self.session["id"])
+                #    max_sec_place = return_max_sec_place(self.session["id"])
+                   # self.Num_max_sec.setText(str(max_sec_res))
+                    self.Num_total_kills.setText(str(kills_res))
+                   # self.Num_sec_place.setText(str(max_sec_place))
+                    self.Num_kills_place.setText(str(kills_place))
+                else:
+                    ex.error_reg1.setText("Такой логин занят!")
+            else:
+                ex.error_reg4.setText("Пароли должны совпадать!")
+
+    def __log(self):  # вход пользователя в свой профиль
+        login = ex.login_log.text()
+        password = ex.password_log.text()
+        res = log(login, password)
+        if res["status"]:
+            self.session["id"] = res["id"]
+            ex.log_window.hide()
+            ex.account.show()
+            msg_box = QMessageBox(ex)
+            msg_box.setText(res["msg"])
+            msg_box.show()
+            kills_res = return_kills(self.session["id"])
+         #  max_sec_res = return_seconds(self.session["id"])
+            kills_place = return_kills_place(self.session["id"])
+          #  max_sec_place = return_max_sec_place(self.session["id"])
+           # self.Num_max_sec.setText(str(max_sec_res))
+            self.Num_total_kills.setText(str(kills_res))
+         #  self.Num_sec_place.setText(str(max_sec_place))sss
+            self.Num_kills_place.setText(str(kills_place))
+            self.Start_Game.clicked.connect(open)
+        else:
+            self.error_log.setText(res["msg"])
+
+    def __clear_log_and_reg(self):  # очистка окон регистрации и входа
+        ex.login_log.setText("")
+        ex.password_log.setText("")
+        ex.login_reg.setText("")
+        ex.password1.setText("")
+        ex.password2.setText("")
+        ex.error_log.setText("")
+        ex.error_reg1.setText("")
+        ex.error_reg2.setText("")
+        ex.error_reg3.setText("")
+        ex.error_reg4.setText("")
+
+    def __leave_profile(self):  # обработка выхода пользователя из профиля
+        self.__clear_log_and_reg()
+        self.session.pop("id")
+        ex.account.hide()
+        ex.reg_window.hide()
+        ex.log_window.show()
+
+    def __del_profile(self):  # обработка удаления пользователем своего профиля
+        password, ok = QInputDialog.getText(
+            ex,
+            "Внимание!",
+            "Введите пароль:",
+            QLineEdit.Password
+        )
+        if ok:
+            password_res = check_password(self.session["id"], password)
+            if password_res["status"]:
+                del_res = del_profile(self.session["id"])
+                self.__leave_profile()
+                msg_box = QtWidgets.QMessageBox(ex)
+                msg_box.setWindowTitle("Внимание!")
+                msg_box.setText(del_res["msg"])
+                msg_box.show()
+            else:
+                msg_box = QMessageBox(ex)
+                msg_box.setWindowTitle("Внимание!")
+                msg_box.setText("Неверный пароль!")
+                msg_box.show()
+
+
 class Menu:
     def __init__(self, punkts):
         self.punkts = punkts
@@ -210,6 +339,7 @@ class Game_Over:
         pygame.key.set_repeat(0, 0)
         font_menu = pygame.font.SysFont('arial', 50)
         punkt = 0
+        check_max_sec(ex.session['id'])
         while done:
             screen.fill((89, 0, 163))
             mp = pygame.mouse.get_pos()
@@ -267,12 +397,13 @@ class Enemy:
         self.hp -= 1
         if self.hp <= 0:
             enemy_count += 1
-            count_kills(self.session["id"])
-            kills_res = return_kills(self.session["id"])
-            kills_place = return_kills_place(self.session["id"])
-            self.Num_total_kills.setText(str(kills_res))
-            self.Num_kills_place.setText(str(kills_place))
-            boss = Enemy(random.randint(40, 760), random.randint(40, 400)), (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+            count_kills(ex.session["id"])
+            kills_res = return_kills(ex.session["id"])
+            kills_place = return_kills_place(ex.session["id"])
+            ex.Num_total_kills.setText(str(kills_res))
+            ex.Num_kills_place.setText(str(kills_place))
+            a = (random.randint(40, 760), random.randint(40, 400))
+            boss = Enemy(a, (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
                          
     def move(self):
         if random.randint(0, 1):
@@ -375,24 +506,123 @@ class Screen:
     def __init__(self):
         pass
 
-
-def return_kills_place(user_id):
-    """Эта функция сортирует пользователей по общему числу убийств противников"""
+def reg(login, password):
+    ''' Эта функция добавляет в таблицу usersBP пользователей '''
     db.row_factory = sqlite3.Row
     cur = db.cursor()
     cur.execute(
         f'''
-            SELECT *, ROW_NUMBER() OVER(ORDER BY kills DESC) AS place
-            FROM usersBH
+            SELECT `login` FROM `usersBH` WHERE `login` = '{login}';
         '''
     )
-    kills_place_res = cur.fetchall()
+    res = cur.fetchall()
     db.commit()
-    for row in kills_place_res:
-        if row[0] == user_id:
-            ind = kills_place_res.index(row)
+    if len(res) == 0:
+        cur.execute(
+            f'''
+                INSERT INTO `usersBH`(`login`, `password`)
+                VALUES (
+                    '{login}',
+                    '{generate_password_hash(password)}'
+                )
+            '''
+        )
+        db.commit()
+        return {
+            "msg": "Вы успешно зарегистрировались!",
+            "status": True,
+            "id": return_user_id(login)["id"]
+        }
     return {
-        "place": kills_place_res[ind][4]
+        "msg": "Такой логин занят!",
+        "status": False
+    }
+
+
+def return_user_id(login):
+    ''' Эта функция возвращает id '''
+    db.row_factory = sqlite3.Row
+    cur = db.cursor()
+    cur.execute(
+        f'''
+            SELECT `id` FROM `usersBP` WHERE `login` = '{login}';
+        '''
+    )
+    res = cur.fetchall()
+    db.commit()
+    return {
+        "id": res[0]["id"]
+    }
+
+
+def log(login, password):
+    ''' Эта функция логинит юзера '''
+    db.row_factory = sqlite3.Row
+    cur = db.cursor()
+    cur.execute(
+        f'''
+            SELECT `id`, `login`, `password` FROM `usersBH`;
+        '''
+    )
+    res = cur.fetchall()
+    db.commit()
+    for row in res:
+        if row["login"] == login and check_password_hash(
+                row['password'],
+                password
+        ):
+            return {
+                "msg": "Вы успешно вошли",
+                "status": True,
+                "id": row["id"]
+            }
+    else:
+        return {
+            "msg": "Неверный логин или пароль!",
+            "status": False
+        }
+
+
+def check_password(user_id, password):
+    ''' Эта функция проверяет ввод паролей на совпадение '''
+    db.row_factory = sqlite3.Row
+    cur = db.cursor()
+    cur.execute(
+        f'''
+            SELECT `id`, `password` FROM `usersBP`;
+        '''
+    )
+    res = cur.fetchall()
+    db.commit()
+    for row in res:
+        if row["id"] == int(user_id) and check_password_hash(
+                row["password"],
+                password
+        ):
+            return {
+                "msg": "Пароли совпали",
+                "status": True,
+            }
+    else:
+        return {
+            "msg": "Пароли не совпали",
+            "status": False
+        }
+
+
+def del_profile(user_id):
+    ''' Эта функция удаляет профиль пользователя '''
+    db.row_factory = sqlite3.Row
+    cur = db.cursor()
+    cur.execute(
+        f'''
+            DELETE FROM `usersBH` WHERE `id` = {user_id};
+        '''
+    )
+    db.commit()
+    return {
+        "msg": "Профиль был успешно удалён",
+        "status": True
     }
 
 
@@ -407,6 +637,20 @@ def count_kills(user_id):
     )
     db.commit()
 
+def return_seconds(user_id):
+    """Эта функция возвращает количество секунд, которое максимально продержался пользователь в игре"""
+    db.row_factory = sqlite3.Row
+    cur = db.cursor()
+    cur.execute(
+        f'''
+            SELECT max_sec FROM usersBH WHERE `id` = {user_id};
+        '''
+    )
+    id_sec = cur.fetchall()
+    db.commit()
+    return {
+        "max_sec": id_sec[0][0]
+    }
 
 def return_kills(user_id):
     """Эта функция возвращает количество убийств противника пользователем"""
@@ -423,6 +667,65 @@ def return_kills(user_id):
         "kills": id_kills[0][0]
     }
 
+def return_max_sec_place(user_id):
+    """Эта функция сортирует пользователей по количеству секунд, которое максимально продержался пользователь в игре"""
+    db.row_factory = sqlite3.Row
+    cur = db.cursor()
+    cur.execute(
+        f'''
+            SELECT *, ROW_NUMBER() OVER(ORDER BY max_sec DESC) AS max_sec_place
+            FROM usersBH
+        '''
+    )
+    sec_place_res = cur.fetchall()
+    db.commit()
+    for row in sec_place_res:
+        if row[0] == user_id:
+            ind = sec_place_res.index(row)
+    return {
+        "place": sec_place_res[ind][4]
+    }
+
+def return_kills_place(user_id):
+    """Эта функция сортирует пользователей по общему числу убийств противников"""
+    db.row_factory = sqlite3.Row
+    cur = db.cursor()
+    cur.execute(
+        f'''
+            SELECT *, ROW_NUMBER() OVER(ORDER BY kills DESC) AS kills_place
+            FROM usersBH
+        '''
+    )
+    kills_place_res = cur.fetchall()
+    db.commit()
+    for row in kills_place_res:
+        if row[0] == user_id:
+            ind = kills_place_res.index(row)
+    return {
+        "place": kills_place_res[ind][4]
+    }
+
+
+def check_max_sec(user_id):
+    '''Эта функция сравнивает значение количества секунд в этой игре с макс количеством секунд'''
+    db.row_factory = sqlite3.Row
+    cur = db.cursor()
+    cur.execute(
+        f'''
+            SELECT max_sec FROM usersBH WHERE `id` = {user_id};
+        '''
+    )
+    id_sec = cur.fetchall()
+    db.commit()
+    print(type(id_sec))
+    if secconds > int(id_sec[0][0]):
+        cur.execute(
+            f'''
+                UPDATE `usersBH` SET `max_sec` = {secconds} WHERE `id` = {user_id};
+            '''
+        )
+    db.commit()
+
 
 def initial():
     global enemy_count
@@ -437,20 +740,24 @@ def initial():
     enemy_count = 0
     projectiles = []
     bullets = []
-    player = Player(1)
+    player = Player(setting_m)
     times = 0
     boss = Enemy((400, 100), (0, 0, 0))
-    diff = 1
 
 enemy_count = 0
 projectiles = []
 bullets = []
-player = Player(1)
 times = 0
 boss = Enemy((400, 100), (0, 0, 0))
 diff = 1
 secconds = 0
-db = sqlite3.connect('data\\progress.db')
+db = sqlite3.connect('progress.db')
+#sys.excepthook = excepthook
+app = QApplication(sys.argv)
+ex = Account()
+ex.reg_to_log()
+ex.log_to_reg()
+ex.show()
 
 def start():
     global projectiles
@@ -596,15 +903,35 @@ def start():
             pygame.display.flip()
             clock.tick(Screen.FPS)
             secconds += 1
-            
-pygame.font.init()
-''' окно '''
-window = pygame.display.set_mode((800, 600))
-pygame.display.set_caption('Bullet-Hell')
-''' холст '''
-screen = pygame.Surface((800, 600))
-''' создаем меню '''
-punkts = [(250, 250, 'Начать игру', (250, 250, 30), (250, 30, 250), 0),
-          (300, 300, 'Выйти', (250, 250, 30), (250, 30, 250), 1)]
-game = Menu(punkts)
-game.menu()
+
+
+def open():
+    global window
+    global screen
+    global diff
+    global setting_m
+    global player
+    if ex.radio_Mouse.isChecked():
+        setting_m = 0
+    elif ex.radio_keyboard.isChecked():
+        setting_m = 1
+    player = Player(setting_m)
+    if ex.Radio_Easy.isChecked():
+        diff = 1
+    elif ex.Radio_Mid.isChecked():
+        diff = 2
+    elif ex.Radio_Hard.isChecked():
+        diff = 3
+    pygame.font.init()
+    ''' окно '''
+    window = pygame.display.set_mode((800, 600))
+    pygame.display.set_caption('Bullet-Hell')
+    ''' холст '''
+    screen = pygame.Surface((800, 600))
+    ''' создаем меню '''
+    punkts = [(250, 250, 'Начать игру', (250, 250, 30), (250, 30, 250), 0),
+            (300, 300, 'Выйти', (250, 250, 30), (250, 30, 250), 1)]
+    game = Menu(punkts)
+    game.menu()
+
+sys.exit(app.exec_())
