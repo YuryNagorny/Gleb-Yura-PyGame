@@ -124,17 +124,6 @@ def del_profile(user_id):
     }
 
 
-def count_seconds(user_id):
-    '''Эта функция вносит количество секунд, которое максимально продержался пользователь в игре, в базу'''
-    db.row_factory = sqlite3.Row
-    cur = db.cursor()
-    cur.execute(
-        f'''
-            UPDATE `usersBH` SET `seconds` = `seconds` + 1 WHERE `id` = {user_id};
-        '''
-    )
-    db.commit()
-
 def count_kills(user_id):
     '''Эта функция вносит количество убийств противника пользователем в базу'''
     db.row_factory = sqlite3.Row
@@ -152,7 +141,7 @@ def return_seconds(user_id):
     cur = db.cursor()
     cur.execute(
         f'''
-            SELECT seconds FROM usersBH WHERE `id` = {user_id};
+            SELECT max_sec FROM usersBH WHERE `id` = {user_id};
         '''
     )
     id_sec = cur.fetchall()
@@ -182,7 +171,7 @@ def return_max_sec_place(user_id):
     cur = db.cursor()
     cur.execute(
         f'''
-            SELECT *, ROW_NUMBER() OVER(ORDER BY seconds DESC) AS place
+            SELECT *, ROW_NUMBER() OVER(ORDER BY max_sec DESC) AS max_sec_place
             FROM usersBH
         '''
     )
@@ -201,7 +190,7 @@ def return_kills_place(user_id):
     cur = db.cursor()
     cur.execute(
         f'''
-            SELECT *, ROW_NUMBER() OVER(ORDER BY kills DESC) AS place
+            SELECT *, ROW_NUMBER() OVER(ORDER BY kills DESC) AS kills_place
             FROM usersBH
         '''
     )
