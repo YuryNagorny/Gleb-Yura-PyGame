@@ -2,7 +2,7 @@ import pygame
 import math
 import sys
 import random
-
+import sqlite3
 
 class Attack:
     def __init__(self):
@@ -272,7 +272,7 @@ class Enemy:
             kills_place = return_kills_place(self.session["id"])
             self.Num_total_kills.setText(str(kills_res))
             self.Num_kills_place.setText(str(kills_place))
-            boss = Enemy((random.randint(40, 760), random.randint(40, 400)), (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+            boss = Enemy(random.randint(40, 760), random.randint(40, 400)), (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
                          
     def move(self):
         if random.randint(0, 1):
@@ -376,6 +376,54 @@ class Screen:
         pass
 
 
+def return_kills_place(user_id):
+    """Эта функция сортирует пользователей по общему числу убийств противников"""
+    db.row_factory = sqlite3.Row
+    cur = db.cursor()
+    cur.execute(
+        f'''
+            SELECT *, ROW_NUMBER() OVER(ORDER BY kills DESC) AS place
+            FROM usersBH
+        '''
+    )
+    kills_place_res = cur.fetchall()
+    db.commit()
+    for row in kills_place_res:
+        if row[0] == user_id:
+            ind = kills_place_res.index(row)
+    return {
+        "place": kills_place_res[ind][4]
+    }
+
+
+def count_kills(user_id):
+    '''Эта функция вносит количество убийств противника пользователем в базу'''
+    db.row_factory = sqlite3.Row
+    cur = db.cursor()
+    cur.execute(
+        f'''
+            UPDATE `usersBH` SET `kills` = `kills` + 1 WHERE `id` = {user_id};
+        '''
+    )
+    db.commit()
+
+
+def return_kills(user_id):
+    """Эта функция возвращает количество убийств противника пользователем"""
+    db.row_factory = sqlite3.Row
+    cur = db.cursor()
+    cur.execute(
+        f'''
+            SELECT kills FROM usersBH WHERE `id` = {user_id};
+        '''
+    )
+    id_kills = cur.fetchall()
+    db.commit()
+    return {
+        "kills": id_kills[0][0]
+    }
+
+
 def initial():
     global enemy_count
     global projectiles 
@@ -402,6 +450,7 @@ times = 0
 boss = Enemy((400, 100), (0, 0, 0))
 diff = 1
 secconds = 0
+db = sqlite3.connect('data\\progress.db')
 
 def start():
     global projectiles
@@ -548,7 +597,6 @@ def start():
             clock.tick(Screen.FPS)
             secconds += 1
             
-
 pygame.font.init()
 ''' окно '''
 window = pygame.display.set_mode((800, 600))
