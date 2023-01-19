@@ -215,7 +215,22 @@ def return_kills_place(user_id):
     }
 
 
-def return_max_sec_by_one(user_id):
-    """Эта функция выбирает максимальное количество секунд пользователя"""
+def check_max_sec(user_id):
+    '''Эта функция сравнивает значение количества секунд в этой игре с макс количеством секунд'''
     db.row_factory = sqlite3.Row
     cur = db.cursor()
+    cur.execute(
+        f'''
+            SELECT max_sec FROM usersBH WHERE `id` = {user_id};
+        '''
+    )
+    id_sec = cur.fetchall()
+    db.commit()
+    print(type(id_sec))
+    if secconds > int(id_sec[0][0]):
+        cur.execute(
+            f'''
+                UPDATE `usersBH` SET `max_sec` = {secconds} WHERE `id` = {user_id};
+            '''
+        )
+    db.commit()
