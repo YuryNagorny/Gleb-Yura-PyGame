@@ -158,7 +158,7 @@ def return_seconds(user_id):
     id_sec = cur.fetchall()
     db.commit()
     return {
-        "seconds": id_sec[0][0]
+        "max_sec": id_sec[0][0]
     }
 
 def return_kills(user_id):
