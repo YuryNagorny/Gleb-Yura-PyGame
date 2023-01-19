@@ -267,8 +267,13 @@ class Enemy:
         self.hp -= 1
         if self.hp <= 0:
             enemy_count += 1
-            boss = Enemy((random.randint(40, 760), random.randint(40, 400)), (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
-            
+            count_kills(self.session["id"])
+            kills_res = return_kills(self.session["id"])
+            kills_place = return_kills_place(self.session["id"])
+            self.Num_total_kills.setText(str(kills_res))
+            self.Num_kills_place.setText(str(kills_place))
+            boss = Enemy((random.randint(40, 760), random.randint(40, 400)), (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+                         
     def move(self):
         if random.randint(0, 1):
             if self.x >= 740:
