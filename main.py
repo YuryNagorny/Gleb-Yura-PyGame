@@ -765,7 +765,6 @@ def start():
     global times
     global screen
     global secconds
-    flag = False
     if player.setting:
         run = True
         pygame.init()
@@ -939,7 +938,6 @@ def open():
             (300, 300, 'Выйти', (250, 250, 30), (250, 30, 250), 1)]
     game = Menu(punkts)
     game.menu()
-
-flag = True
-if flag:
-    sys.exit(app.exec_())
+    
+    
+sys.exit(app.exec_())
