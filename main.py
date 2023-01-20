@@ -209,12 +209,12 @@ class Account(QMainWindow):
             msg_box.setText(res["msg"])
             msg_box.show()
             kills_res = return_kills(self.session["id"])
-         #  max_sec_res = return_seconds(self.session["id"])
+            max_sec_res = return_seconds(self.session["id"])
             kills_place = return_kills_place(self.session["id"])
-          #  max_sec_place = return_max_sec_place(self.session["id"])
-           # self.Num_max_sec.setText(str(max_sec_res))
+            max_sec_place = return_max_sec_place(self.session["id"])
+            self.Num_max_sec.setText(str(max_sec_res))
             self.Num_total_kills.setText(str(kills_res))
-         #  self.Num_sec_place.setText(str(max_sec_place))sss
+            self.Num_sec_place.setText(str(max_sec_place))
             self.Num_kills_place.setText(str(kills_place))
             self.Start_Game.clicked.connect(open)
         else:
@@ -917,6 +917,8 @@ def open():
         setting_m = 0
     elif ex.radio_keyboard.isChecked():
         setting_m = 1
+    else:
+        return None
     player = Player(setting_m)
     if ex.Radio_Easy.isChecked():
         diff = 1
@@ -924,6 +926,8 @@ def open():
         diff = 2
     elif ex.Radio_Hard.isChecked():
         diff = 3
+    else:
+        return None
     pygame.font.init()
     ''' окно '''
     window = pygame.display.set_mode((800, 600))
