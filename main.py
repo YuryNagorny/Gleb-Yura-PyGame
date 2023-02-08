@@ -23,50 +23,41 @@ class Attack:
                 color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
                 vector = (1, random.randint(20, 500) / 100, random.randint(20, 500) / 100)
                 self.projectiles.append(Projectile(coord[0], coord[1], radius[self.type_], color, 0, vector))
-                self.projectiles.append(
-                    Projectile(coord[0], coord[1], radius[self.type_], color, 0, (0, vector[1], vector[-1])))
+                self.projectiles.append(Projectile(coord[0], coord[1], radius[self.type_], color, 0, (0, vector[1], vector[-1])))
         if self.geometry == 2:
             for _ in range(0, self.count):
                 color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
                 vector = (1, random.randint(20, 500) / 100, random.randint(20, 500) / 100)
                 self.projectiles.append(Projectile(coord[0], coord[1], radius[self.type_], color, 0, vector))
-                self.projectiles.append(
-                    Projectile(coord[0], coord[1], radius[self.type_], color, 0, (0, vector[1], vector[-1])))
+                self.projectiles.append(Projectile(coord[0], coord[1], radius[self.type_], color, 0, (0, vector[1], vector[-1])))
                 self.projectiles.append(Projectile(coord[0], coord[1], radius[self.type_], color, 1, vector))
-                self.projectiles.append(
-                    Projectile(coord[0], coord[1], radius[self.type_], color, 1, (0, vector[1], vector[-1])))
+                self.projectiles.append(Projectile(coord[0], coord[1], radius[self.type_], color, 1, (0, vector[1], vector[-1])))     
         if self.geometry == 3:
-            for _ in range(0, self.count):
-                if random.randint(0, 1):
-                    color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
-                    vector = (1, random.randint(20, 300) / 100, random.randint(20, 500) / 100)
-                    self.projectiles.append(Projectile(coord[0], coord[1], radius[self.type_], color, 0, vector))
-                    self.projectiles.append(
-                        Projectile(coord[0], coord[1], radius[self.type_], color, 0, (0, vector[1], vector[-1])))
-                    vector = (1, random.randint(20, 500) / 100, random.randint(20, 500) / 100)
-                    self.projectiles.append(Projectile(coord[0], coord[1], radius[self.type_], color, 1, vector))
-                    self.projectiles.append(
-                        Projectile(coord[0], coord[1], radius[self.type_], color, 1, (0, vector[1], vector[-1])))
-                else:
-                    color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
-                    vector = (1, random.randint(20, 300) / 100, random.randint(20, 500) / 100)
-                    self.projectiles.append(Projectile(coord[0], coord[1], radius[self.type_], color, 1, vector))
-                    self.projectiles.append(
-                        Projectile(coord[0], coord[1], radius[self.type_], color, 1, (0, vector[1], vector[-1])))
-                    vector = (1, random.randint(20, 500) / 100, random.randint(20, 500) / 100)
-                    self.projectiles.append(Projectile(coord[0], coord[1], radius[self.type_], color, 0, vector))
-                    self.projectiles.append(
-                        Projectile(coord[0], coord[1], radius[self.type_], color, 0, (0, vector[1], vector[-1])))
+                for _ in range(0, self.count):
+                    if random.randint(0, 1):
+                        color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+                        vector = (1, random.randint(20, 300) / 100, random.randint(20, 500) / 100)
+                        self.projectiles.append(Projectile(coord[0], coord[1], radius[self.type_], color, 0, vector))
+                        self.projectiles.append(Projectile(coord[0], coord[1], radius[self.type_], color, 0, (0, vector[1], vector[-1])))
+                        vector = (1, random.randint(20, 500) / 100, random.randint(20, 500) / 100)
+                        self.projectiles.append(Projectile(coord[0], coord[1], radius[self.type_], color, 1, vector))
+                        self.projectiles.append(Projectile(coord[0], coord[1], radius[self.type_], color, 1, (0, vector[1], vector[-1])))
+                    else:
+                        color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+                        vector = (1, random.randint(20, 300) / 100, random.randint(20, 500) / 100)
+                        self.projectiles.append(Projectile(coord[0], coord[1], radius[self.type_], color, 1, vector))
+                        self.projectiles.append(Projectile(coord[0], coord[1], radius[self.type_], color, 1, (0, vector[1], vector[-1])))
+                        vector = (1, random.randint(20, 500) / 100, random.randint(20, 500) / 100)
+                        self.projectiles.append(Projectile(coord[0], coord[1], radius[self.type_], color, 0, vector))
+                        self.projectiles.append(Projectile(coord[0], coord[1], radius[self.type_], color, 0, (0, vector[1], vector[-1])))
         if self.geometry == 4:
             for _ in range(0, self.count):
                 color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
                 vector = (1, random.randint(20, 500) / 100, random.randint(20, 500) / 100)
                 self.projectiles.append(Projectile(coord[0], coord[1], radius[self.type_], color, 1, vector))
-                self.projectiles.append(
-                    Projectile(coord[0], coord[1], radius[self.type_], color, 1, (0, vector[1], vector[-1])))
+                self.projectiles.append(Projectile(coord[0], coord[1], radius[self.type_], color, 1, (0, vector[1], vector[-1])))
                 self.projectiles.append(Projectile(coord[0], coord[1], radius[self.type_], color, 0, vector))
-                self.projectiles.append(
-                    Projectile(coord[0], coord[1], radius[self.type_], color, 0, (0, vector[1], vector[-1])))
+                self.projectiles.append(Projectile(coord[0], coord[1], radius[self.type_], color, 0, (0, vector[1], vector[-1])))
         if self.geometry == 5:
             for _ in range(0, self.count):
                 color = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
@@ -97,7 +88,7 @@ class Attack:
                     vector2 = (0, vector1[1], vector1[-1])
                     vector3 = (1, random.randint(20, 500) / 100, random.randint(20, 500) / 100)
                     self.projectiles.append(Projectile(0, 300, radius[self.type_], color, 0, vector3))
-                    self.projectiles.append(Projectile(0, 300, radius[self.type_], color, 1, vector3))
+                    self.projectiles.append(Projectile(0, 300, radius[self.type_], color, 1, vector3))                    
                     self.projectiles.append(Projectile(800, 600, radius[self.type_], color, 1, vector2))
                     self.projectiles.append(Projectile(800, 0, radius[self.type_], color, 0, vector2))
             else:
@@ -130,7 +121,7 @@ class Attack:
                         self.projectiles.append(Projectile(i, 600, radius[self.type_], color2, 0, (0, 0, -2)))
         if self.geometry == 9:
             color1 = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
-            color2 = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))
+            color2 = (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255))            
             a = -1
             if random.randint(0, 1):
                 for i in range(0, 600, self.type_ * 16):
@@ -146,7 +137,7 @@ class Attack:
                         self.projectiles.append(Projectile(800, i, radius[self.type_], color1, 0, (0, 2, 0)))
                     else:
                         self.projectiles.append(Projectile(0, i, radius[self.type_], color1, 0, (0, -2, 0)))
-
+                        
 
 class Account(QMainWindow):
     def __init__(self):
@@ -194,13 +185,14 @@ class Account(QMainWindow):
                     msg_box.show()
                     self.greeting.setText(f'Добро пожаловать, {login}!')
                     kills_res = return_kills(self.session["id"])
-                    #   max_sec_res = return_seconds(self.session["id"])
+                 #   max_sec_res = return_seconds(self.session["id"])
                     kills_place = return_kills_place(self.session["id"])
-                    #    max_sec_place = return_max_sec_place(self.session["id"])
-                    # self.Num_max_sec.setText(str(max_sec_res))
+                #    max_sec_place = return_max_sec_place(self.session["id"])
+                   # self.Num_max_sec.setText(str(max_sec_res))
                     self.Num_total_kills.setText(str(kills_res))
-                    # self.Num_sec_place.setText(str(max_sec_place))
+                   # self.Num_sec_place.setText(str(max_sec_place))
                     self.Num_kills_place.setText(str(kills_place))
+                    self.Start_Game.clicked.connect(open)
                 else:
                     ex.error_reg1.setText("Такой логин занят!")
             else:
@@ -269,7 +261,7 @@ class Account(QMainWindow):
                 msg_box.setWindowTitle("Внимание!")
                 msg_box.setText("Неверный пароль!")
                 msg_box.show()
-
+                
     def closeEvent(self, event):
         sys.exit(app.exec_())
 
@@ -289,7 +281,8 @@ class Menu:
         done = True
         pygame.mouse.set_visible(True)
         pygame.key.set_repeat(0, 0)
-        font_menu = pygame.font.SysFont('arial', 36)
+        font_menu = pygame.font.Font(
+            r"data\arial.ttf", 50)
         punkt = 0
         while done:
             screen.fill((89, 0, 163))
@@ -325,7 +318,7 @@ class Menu:
 
             window.blit(screen, (0, 0))
             pygame.display.update()
-
+            
 
 class Game_Over:
     def __init__(self, punkts):
@@ -349,7 +342,7 @@ class Game_Over:
         done = True
         pygame.mouse.set_visible(True)
         pygame.key.set_repeat(0, 0)
-        font_menu = pygame.font.SysFont('arial', 36)
+        font_menu = pygame.font.SysFont('arial', 50)
         punkt = 0
         check_max_sec(ex.session['id'])
         isquit = True
@@ -388,21 +381,21 @@ class Game_Over:
             window.blit(screen, (0, 0))
             f2 = pygame.font.SysFont('serif', 48)
             text2 = f2.render('Игра окончена! Вы проиграли!', False,
-                              (0, 0, 0))
+                            (0, 0, 0))
             window.blit(text2, (100, 100))
-            pygame.display.update()
-
-
+            pygame.display.update()                             
+ 
+                    
 class Enemy:
     def __init__(self, coords, color):
         self.x, self.y = coords
         self.hp = 100 * (enemy_count / 50 + 1)
         self.color = color
         self.r = 40
-
+        
     def render(self):
         pygame.draw.circle(screen, self.color, (self.x, self.y), self.r)
-
+    
     def damage_taken(self):
         global enemy_count
         global boss
@@ -416,7 +409,7 @@ class Enemy:
             ex.Num_kills_place.setText(str(kills_place))
             a = (random.randint(40, 760), random.randint(40, 400))
             boss = Enemy(a, (random.randint(0, 255), random.randint(0, 255), random.randint(0, 255)))
-
+                         
     def move(self):
         if random.randint(0, 1):
             if self.x >= 740:
@@ -432,8 +425,7 @@ class Enemy:
                 self.y += 1
             else:
                 self.y += 1 if random.randint(0, 1) else -1
-
-
+        
 class Projectile:
     def __init__(self, x, y, r, color, gravity, vector):
         self.x = x
@@ -446,7 +438,7 @@ class Projectile:
 
     def render(self):
         pygame.draw.circle(screen, self.color, (self.x, self.y), self.r)
-
+        
     def kill(self, other):
         a, b, c = (self.x, self.y, self.r)
         d, e, f = (other.x, other.y, other.r - 2)
@@ -473,7 +465,7 @@ class P_bullet:
 
     def render(self):
         pygame.draw.rect(screen, (0, 200, 0), (self.x - 1, self.y, 2, 3))
-
+    
     def shot(self, other):
         a, b, c = (self.x, self.y, self.r)
         d, e, f = (other.x, other.y, other.r - 3)
@@ -494,11 +486,11 @@ class Player:
         if (x > 0 and self.x <= 800 - self.r) or (x < 0 and self.x >= 0 + self.r):
             self.x += x
         if (y > 0 and self.y <= 600 - self.r) or (y < 0 and self.y >= 0 + self.r):
-            self.y += y
+           self.y += y
 
     def render(self):
         pygame.draw.circle(screen, (255, 200, 200), (self.x, self.y), self.r)
-
+    
     def mouse_setting(self, pos):
         self.x, self.y = pos[0], pos[1]
 
@@ -519,14 +511,13 @@ class Screen:
     def __init__(self):
         pass
 
-
 def reg(login, password):
     ''' Эта функция добавляет в таблицу usersBP пользователей '''
     db.row_factory = sqlite3.Row
     cur = db.cursor()
     cur.execute(
         f'''
-            SELECT `login` FROM `USERS` WHERE `login` = '{login}';
+            SELECT `login` FROM `usersBH` WHERE `login` = '{login}';
         '''
     )
     res = cur.fetchall()
@@ -534,7 +525,7 @@ def reg(login, password):
     if len(res) == 0:
         cur.execute(
             f'''
-                INSERT INTO `USERS`(`login`, `password`)
+                INSERT INTO `usersBH`(`login`, `password`)
                 VALUES (
                     '{login}',
                     '{generate_password_hash(password)}'
@@ -552,14 +543,13 @@ def reg(login, password):
         "status": False
     }
 
-
 def return_user_id(login):
     ''' Эта функция возвращает id '''
     db.row_factory = sqlite3.Row
     cur = db.cursor()
     cur.execute(
         f'''
-            SELECT `id` FROM `USERS` WHERE `login` = '{login}';
+            SELECT `id` FROM `usersBH` WHERE `login` = '{login}';
         '''
     )
     res = cur.fetchall()
@@ -568,14 +558,13 @@ def return_user_id(login):
         "id": res[0]["id"]
     }
 
-
 def log(login, password):
     ''' Эта функция логинит юзера '''
     db.row_factory = sqlite3.Row
     cur = db.cursor()
     cur.execute(
         f'''
-            SELECT `id`, `login`, `password` FROM `USERS`;
+            SELECT `id`, `login`, `password` FROM `usersBH`;
         '''
     )
     res = cur.fetchall()
@@ -596,14 +585,13 @@ def log(login, password):
             "status": False
         }
 
-
 def check_password(user_id, password):
     ''' Эта функция проверяет ввод паролей на совпадение '''
     db.row_factory = sqlite3.Row
     cur = db.cursor()
     cur.execute(
         f'''
-            SELECT `id`, `password` FROM `USERS`;
+            SELECT `id`, `password` FROM `usersBP`;
         '''
     )
     res = cur.fetchall()
@@ -630,7 +618,7 @@ def del_profile(user_id):
     cur = db.cursor()
     cur.execute(
         f'''
-            DELETE FROM `USERS` WHERE `id` = {user_id};
+            DELETE FROM `usersBH` WHERE `id` = {user_id};
         '''
     )
     db.commit()
@@ -646,11 +634,10 @@ def count_kills(user_id):
     cur = db.cursor()
     cur.execute(
         f'''
-            UPDATE `USERS` SET `kills` = `kills` + 1 WHERE `id` = {user_id};
+            UPDATE `usersBH` SET `kills` = `kills` + 1 WHERE `id` = {user_id};
         '''
     )
     db.commit()
-
 
 def return_seconds(user_id):
     """Эта функция возвращает количество секунд, которое максимально продержался пользователь в игре"""
@@ -658,7 +645,7 @@ def return_seconds(user_id):
     cur = db.cursor()
     cur.execute(
         f'''
-            SELECT max_sec FROM `USERS` WHERE `id` = {user_id};
+            SELECT max_sec FROM usersBH WHERE `id` = {user_id};
         '''
     )
     id_sec = cur.fetchall()
@@ -667,14 +654,13 @@ def return_seconds(user_id):
         "max_sec": id_sec[0][0]
     }
 
-
 def return_kills(user_id):
     """Эта функция возвращает количество убийств противника пользователем"""
     db.row_factory = sqlite3.Row
     cur = db.cursor()
     cur.execute(
         f'''
-            SELECT kills FROM `USERS` WHERE `id` = {user_id};
+            SELECT kills FROM usersBH WHERE `id` = {user_id};
         '''
     )
     id_kills = cur.fetchall()
@@ -683,7 +669,6 @@ def return_kills(user_id):
         "kills": id_kills[0][0]
     }
 
-
 def return_max_sec_place(user_id):
     """Эта функция сортирует пользователей по количеству секунд, которое максимально продержался пользователь в игре"""
     db.row_factory = sqlite3.Row
@@ -691,7 +676,7 @@ def return_max_sec_place(user_id):
     cur.execute(
         f'''
             SELECT *, ROW_NUMBER() OVER(ORDER BY max_sec DESC) AS max_sec_place
-            FROM `USERS`
+            FROM usersBH
         '''
     )
     sec_place_res = cur.fetchall()
@@ -703,7 +688,6 @@ def return_max_sec_place(user_id):
         "place": sec_place_res[ind][4]
     }
 
-
 def return_kills_place(user_id):
     """Эта функция сортирует пользователей по общему числу убийств противников"""
     db.row_factory = sqlite3.Row
@@ -711,7 +695,7 @@ def return_kills_place(user_id):
     cur.execute(
         f'''
             SELECT *, ROW_NUMBER() OVER(ORDER BY kills DESC) AS kills_place
-            FROM `USERS`
+            FROM usersBH
         '''
     )
     kills_place_res = cur.fetchall()
@@ -730,7 +714,7 @@ def check_max_sec(user_id):
     cur = db.cursor()
     cur.execute(
         f'''
-            SELECT max_sec FROM `USERS` WHERE `id` = {user_id};
+            SELECT max_sec FROM usersBH WHERE `id` = {user_id};
         '''
     )
     id_sec = cur.fetchall()
@@ -738,7 +722,7 @@ def check_max_sec(user_id):
     if secconds > int(id_sec[0][0]):
         cur.execute(
             f'''
-                UPDATE `USERS` SET `max_sec` = {secconds} WHERE `id` = {user_id};
+                UPDATE `usersBH` SET `max_sec` = {secconds} WHERE `id` = {user_id};
             '''
         )
     db.commit()
@@ -746,8 +730,8 @@ def check_max_sec(user_id):
 
 def initial():
     global enemy_count
-    global projectiles
-    global bullets
+    global projectiles 
+    global bullets 
     global player
     global times
     global boss
@@ -761,7 +745,6 @@ def initial():
     times = 0
     boss = Enemy((400, 100), (0, 0, 0))
 
-
 enemy_count = 0
 projectiles = []
 bullets = []
@@ -769,14 +752,13 @@ times = 0
 boss = Enemy((400, 100), (0, 0, 0))
 diff = 1
 secconds = 0
-db = sqlite3.connect('BH.db')
-# sys.excepthook = excepthook
+db = sqlite3.connect('progress.db')
+#sys.excepthook = excepthook
 app = QApplication(sys.argv)
 ex = Account()
 ex.reg_to_log()
 ex.log_to_reg()
 ex.show()
-
 
 def start():
     global flag
@@ -789,11 +771,11 @@ def start():
         pygame.init()
         size = width, height = 800, 600
         screen = pygame.display.set_mode(size)
-        while run:
+        while run: 
             if len(projectiles) == 0 or times == 300:
                 a = Attack()
                 projectiles = a.projectiles.copy()
-                boss.move()
+                boss.move()  
             clock = pygame.time.Clock()
             keys = pygame.key.get_pressed()
             for event in pygame.event.get():
@@ -851,7 +833,7 @@ def start():
                     i.render()
                     i.move()
                     if i.y < 0:
-                        del bullets[bullets.index(i)]
+                        del bullets[bullets.index(i)]                       
                 for i in projectiles:
                     if 0 > i.x or i.x > 800 or 0 > i.y or i.y > 600:
                         del projectiles[projectiles.index(i)]
@@ -860,7 +842,7 @@ def start():
                     if i.kill(player):
                         ''' создаем меню '''
                         punkts = [(250, 250, 'Новая игра', (250, 250, 30), (250, 30, 250), 0),
-                                  (300, 300, 'Выйти', (250, 250, 30), (250, 30, 250), 1)]
+                                (300, 300, 'Выйти', (250, 250, 30), (250, 30, 250), 1)]
                         game = Game_Over(punkts)
                         game.game_over()
                         run = False
@@ -914,7 +896,7 @@ def start():
                 if i.kill(player):
                     ''' создаем меню '''
                     punkts = [(250, 250, 'Новая игра', (250, 250, 30), (250, 30, 250), 0),
-                              (300, 300, 'Выйти', (250, 250, 30), (250, 30, 250), 1)]
+                            (300, 300, 'Выйти', (250, 250, 30), (250, 30, 250), 1)]
                     game = Game_Over(punkts)
                     game.game_over()
             player.render()
@@ -946,6 +928,7 @@ def open():
         diff = 3
     else:
         return None
+    print(1)
     pygame.font.init()
     ''' окно '''
     window = pygame.display.set_mode((800, 600))
@@ -954,9 +937,9 @@ def open():
     screen = pygame.Surface((800, 600))
     ''' создаем меню '''
     punkts = [(250, 250, 'Начать игру', (250, 250, 30), (250, 30, 250), 0),
-              (300, 300, 'Выйти', (250, 250, 30), (250, 30, 250), 1)]
+            (300, 300, 'Выйти', (250, 250, 30), (250, 30, 250), 1)]
     game = Menu(punkts)
     game.menu()
-
-
+    
+    
 sys.exit(app.exec_())
